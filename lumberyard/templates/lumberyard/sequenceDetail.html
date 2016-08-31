@@ -1,0 +1,114 @@
+{% extends "lumberyard/base.html" %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load group_filter %}
+{% block title %}SequenceDetail - Lumberyard{% endblock %}
+{% block extrahead %}
+    <link href="{% static "django_tables2/themes/paleblue/css/screen.css" %}" rel="stylesheet" />
+    <link href="{% static "lumberyard/css/sequencedetail.css" %}" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script type="text/javascript">
+      $( document ).ready( function() {
+        $( '#spinner' ).hide();
+            $( '#searchbutton' ).click( function() {
+            searchtext = $( '#searchtext').val();
+            jobname = $( '#jobname' ).val();
+            sequencename = $( '#sequencename' ).val();
+            $( '.tabledata' ).html( '' ).load( '{% url 'lumberyard:renderSearch' %}?searchtext=' + searchtext +'&jobname=' + jobname + '&sequencename=' + sequencename);
+        });
+      });
+
+      $( document ).ajaxStart( function() {
+        $( '#spinner' ).show();
+        }).ajaxStop( function() {
+        $( '#spinner' ).hide();
+      });
+    </script>
+{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="top-navigation">
+      <div id="logo-container"></div>
+      <div id="nav-link">
+        {% if request.user|has_group:"admin" %}
+        <a href="{% url 'admin:index' %}" class="link">Admin</a><span style="color: #fdcf17;">|</span>
+        {% endif %}
+        <a href="{% url 'lumberyard:logout' %}" class="link">Logout</a>
+      </div>
+      <div id="sequence-info">
+          {{ job_name }} - {{ job_num }} | {{ sequence_name }}
+          <input type="hidden" id="jobname" value="{{ job_name }}"/>
+          <input type="hidden" id="sequencename" value="{{ sequence_name }}"/>
+      </div>
+    </div>
+    <hr>
+  </div>
+  <div class="row">
+    <div class="sequencedetailinfo">
+        <div id="sequencedetaillabel" class="row">
+            Sequence Detail
+            <a href="/lumberyard/jobDetail/{{ job_id }}"><-- back to sequence list</a>
+        </div>
+        <div id="internal">
+            <p id="internallabel">internal</p>
+            <div id="internalcontent">
+                <p>producer: {{ producer }}</p>
+                <p>email alias: {{ email_alias }}</p>
+                <p>2D lead: {{ lead_2D }}</p>
+                <p>3D lead: {{ lead_3D }}</p>
+                <p>date awarded: {{ date_awarded|date:"SHORT_DATE_FORMAT" }}</p>
+                <p>pitched: {{ date_pitch|date:"SHORT_DATE_FORMAT" }}</p>
+                <p>delivery: {{ date_delivery|date:"SHORT_DATE_FORMAT" }}</p>
+            </div>
+        </div>
+        <div id="artists">
+            <p id="artistslabel">artists</p>
+            <hr>
+            <div id="artistscontent">
+                {% for artist in artist_list|slice:"7" %}
+                {% if artist %}
+                <p>&nbsp;&nbsp;&nbsp;{{ artist }}</p>
+                <hr>
+                {% else %}
+                <p class="blankline">&nbsp;&nbsp;&nbsp;blank line: same color as background </p>
+                <hr>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        <div id="tasks">
+            <p id="taskslabel">tasks</p>
+            <hr>
+            <div id="taskscontent">
+                {% for task in tasks|slice:"7"%}
+                <p>&nbsp;&nbsp;&nbsp;{{ task }}</p>
+                <hr>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="rendersearchfield">
+      <form>
+          <div id="rendertablelabel">Render List</div>
+          <div id="searchdiv">
+              <input type="button" value="SEARCH" id="searchbutton">
+              <span id="spinner"><img src="http://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif"/></span>
+              <input type="reset" value="RESET" id="reset">
+          </div>
+          <div id="searchtextfield">
+              <input type="text" id="searchtext">
+          </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="tabledata">
+        {% render_table table %}
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "lumberyard/base.html" %}
+
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block title %}login : Lumberyard{% endblock %}
+{% block extrahead %}<link href="{% static "lumberyard/css/login.css" %}" rel="stylesheet" />{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="Absolute-Center is-Responsive">
+      <div id="logo-container"></div>
+      <div class="col-sm-12 col-md-10 col-md-offset-1">
+      {% crispy form %}
+      </div>  
+    </div>    
+  </div>
+{% endblock %}
+

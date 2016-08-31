@@ -1,0 +1,20 @@
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" {% if LANGUAGE_BIDI %}dir="rtl"{% endif %}>
+<head>
+<title>{% block title %}{% endblock %}</title>
+</head>
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+
+<!-- Container -->
+<div id="container">
+{% block content %}
+{% if user.is_authenticated %}
+    <p>Welcome, {{ user.username }}  <a href="{% url 'lumberyard:logout' %}">[logout]</a></p>
+{% else %}
+    <p>Welcome, Guest <a href="{% url 'lumberyard:login' %}">[login]</a></p>
+{% endif %}
+{% endblock %}
+</div>
+</body>
+</html>

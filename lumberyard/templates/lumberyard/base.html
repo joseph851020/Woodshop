@@ -1,0 +1,15 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+  <link rel="stylesheet" href="{% static "lumberyard/css/bootstrap.min.css" %}" />
+  <link rel="stylesheet" href="{% static "lumberyard/css/base.css" %}" />
+  {% block extrahead %}{% endblock %}
+  <title>{% block title %}My Base Template{% endblock %}</title>
+</head>
+<body>
+  <div class="container">
+  {% block content %}<h1>This is the content area</h1>{% endblock %}
+  </div>
+</body>
+</html>

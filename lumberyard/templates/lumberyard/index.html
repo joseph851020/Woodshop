@@ -1,0 +1,96 @@
+{% extends "lumberyard/base.html" %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load group_filter %}
+{% block title %}Jobs - Lumberyard{% endblock %}
+{% block extrahead %}
+    <link href="{% static "django_tables2/themes/paleblue/css/screen.css" %}" rel="stylesheet" />
+    <link href="{% static "lumberyard/css/jobstable.css" %}" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script type="text/javascript">
+      $( function() {
+        $( '#datepicker1' ).datepicker();
+        $( '#datepicker2' ).datepicker();
+      } );
+      $( document ).ready( function() {
+        $( '#spinner' ).hide();
+        $( '#searchbutton' ).click( function() {
+            if ($( '#datepicker1' ).val()!=''&&$( '#datepicker2' ).val()=='') alert('Please insert the end date.');
+            else if ($( '#datepicker1' ).val()==''&&$( '#datepicker2' ).val()!='') alert('Please insert the start date.');
+            else if ($( '#datepicker1' ).val() > $( '#datepicker2' ).val()) alert('Start date must be before End date');
+            else {
+                startdate='';
+                enddate='';
+                if($( '#datepicker1' ).val()!=''&&$( '#datepicker2' ).val()!='') {
+                    startdate = $('#datepicker1').val().substring(6, 10) + '-' + $('#datepicker1').val().substring(0, 2) + '-' + $('#datepicker1').val().substring(3, 5);
+                    enddate = $('#datepicker2').val().substring(6, 10) + '-' + $('#datepicker2').val().substring(0, 2) + '-' + $('#datepicker2').val().substring(3, 5);
+                }
+                datetype = $( '#datetype' ).val();
+                jobstatus = $( '#jobstatus' ).val();
+                searchtext = $( '#searchtext').val();
+                $( '.tabledata' ).html( '' ).load( '{% url 'lumberyard:jobSearch' %}?startdate=' + startdate + '&enddate=' + enddate + '&datetype=' + datetype + '&jobstatus=' + jobstatus + '&searchtext=' + searchtext );
+            }
+        });
+      });
+
+      $( document ).ajaxStart( function() {
+        $( '#spinner' ).show();
+        }).ajaxStop( function() {
+        $( '#spinner' ).hide();
+      });
+    </script>
+{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="top-navigation">
+      <div id="logo-container"></div>
+      <div id="nav-link">
+        {% if request.user|has_group:"admin" %}
+        <a href="{% url 'admin:index' %}" class="link">Admin</a><span style="color: #fdcf17;">|</span>
+        {% endif %}
+        <a href="{% url 'lumberyard:logout' %}" class="link">Logout</a>
+      </div>
+    </div>
+    <hr>
+  </div>
+  <div class="row">
+    <div class="searchfield">
+      <form>
+          <div id="jobtable">Job Table</div>
+          <div id="datefield">
+              Date Range:
+              <input type="text" id="datepicker1">
+              <span style="text-transform: lowercase;">to</span>
+              <input type="text" id="datepicker2">
+              <select id="datetype">
+                   <option value="date_awarded">date_awarded</option>
+                   <option value="date_delivery">date_delivery</option>
+               </select>
+          </div>
+          <div id="jobstatusfield">
+              <select id="jobstatus">
+                   <option value="1">active</option>
+                   <option value="0">inactive</option>
+                   <option value="2">all</option>
+              </select>
+          </div>
+          <div id="searchtextfield">
+              <input type="text" id="searchtext">
+          </div>
+          <div id="searchbutton">
+              <input type="reset" value="RESET" id="reset">
+              <input type="button" value="SEARCH" id="searchbutton">
+              <span id="spinner"><img src="http://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif"/></span>
+          </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="tabledata">
+        {% render_table table %}
+    </div>
+  </div>
+{% endblock %}

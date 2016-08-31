@@ -1,0 +1,234 @@
+.container {
+  width: 100%;
+  height: 100%;
+}
+.top-navigation {
+  width: 100%;
+  height: 12%;
+  text-transform: uppercase;
+}
+
+.top-navigation #logo-container{
+  position: absolute;
+  top: 30px; left: 2%; bottom: 0; right: 0;
+  width: 300px;
+  height: 80px;
+  /* logo background color */
+  background: #B3B3B3 url("../images/lumberyard.png") no-repeat bottom;
+  background-size: 100%;
+}
+
+.top-navigation #job-info{
+  display: inline-block;
+  float: right;
+  margin-right: 25%;
+  margin-top: 5%;
+  font-size: 24px;
+  color: white;
+}
+
+.top-navigation #nav-link {
+  float: right;
+  margin-top: 6%;
+  margin-right: 2%;
+}
+
+.top-navigation #nav-link .link {
+    margin-right: 14px;
+    margin-left: 10px;
+    /* text color for ADMIN and LOGOUT link */
+    color: #fdcf17;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+}
+
+hr {
+    margin-top: 10%;
+    width: 100%;
+    border-color: #fdcf17;
+}
+
+.jobdetailinfo{
+    margin-left: 1%;
+}
+
+.jobdetailinfo #jobdetaillabel {
+    margin-left: 1%;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    text-transform: uppercase;
+    font-size: 24px;
+    color: #fdcf17;
+}
+
+.jobdetailinfo #jobdetaillabel a{
+    float: right;
+    margin-top: 1%;
+    margin-right: 4%;
+    text-transform: uppercase;
+    font-size: 12px;
+    color: #fdcf17;
+    font-weight: bold;
+}
+
+.jobdetailinfo #internal{
+    display: inline-block;
+    background-color: #c0c0c0;
+    margin-right: 0.5%;
+    width: 32%;
+}
+
+.jobdetailinfo #internal #internallabel{
+    margin-left: 3%;
+    margin-top: 1.5%;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.jobdetailinfo  #internal #internalcontent{
+    margin-left: 3%;
+    font-size: 16px;
+    color: white;
+}
+
+.jobdetailinfo #agency{
+    display:inline-block;
+    background-color: #c0c0c0;
+    margin-right: 0.5%;
+    width: 32%;
+}
+
+.jobdetailinfo #agency #agencylabel{
+    margin-left: 3%;
+    margin-top: 1.5%;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.jobdetailinfo #agency #agencycontent{
+    margin-left: 3%;
+    font-size: 16px;
+    color: white;
+}
+
+.jobdetailinfo #agency #agencycontent .blankline{
+    margin-left: 3%;
+    font-size: 16px;
+    color: #c0c0c0;
+}
+
+.jobdetailinfo #client{
+    display:inline-block;
+    background-color: #c0c0c0;
+    margin-right: 0.5%;
+    width: 32%;
+}
+
+.jobdetailinfo #client #clientlabel{
+    margin-left: 3%;
+    margin-top: 1.5%;
+    text-transform: uppercase;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.jobdetailinfo #client #clientcontent{
+    margin-left: 3%;
+    font-size: 16px;
+    color: white;
+}
+
+.jobdetailinfo #client #clientcontent .blankline{
+    margin-left: 3%;
+    font-size: 16px;
+    color: #c0c0c0;
+}
+
+.sequencesearchfield {
+    margin-left: 2%;
+    margin-top: 2%;
+    margin-bottom: 1%;
+    text-transform: uppercase;
+    font-size: 20px;
+}
+
+.sequencesearchfield #sequencetablelabel{
+    display: inline-block;
+    color: #fdcf17;
+}
+
+.sequencesearchfield #datefield{
+    display: inline-block;
+    color: white;
+    margin-left: 3%;
+}
+
+.sequencesearchfield #datefield input{
+    width: 110px;
+    color: black;
+    border-radius: 5px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.sequencesearchfield #searchtextfield{
+    display: inline-block;
+    margin-left: 3%;
+    color: white;
+}
+
+.sequencesearchfield #searchtextfield input{
+    width: 200px;
+    color: black;
+    border-radius: 5px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.sequencesearchfield #searchbutton{
+    display: inline-block;
+    margin-left: 3%;
+}
+
+.sequencesearchfield #searchbutton input{
+    width: 100px;
+    height: 35px;
+    background-color: #B3B3B3;
+    color:white;
+    border-radius: 5px;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
+.tabledata{
+    margin-left: 1%;
+    margin-right: 2%;
+}
+
+.tabledata table.paleblue{
+    border-color: #fdcf17;
+    font-size: 12px;
+}
+
+.tabledata table.paleblue th{
+    background: #B3B3B3;
+    border-color: #fdcf17;
+    font-size: 16px;
+}
+
+.tabledata table.paleblue td{
+    border-color: #fdcf17;
+    width: 20%;
+}
+
+.tabledata table.paleblue tr.odd {
+    background-color: #B3B3B3;
+}
+
+.tabledata table.paleblue tr.even {
+    background-color: #909090;
+    color:white;
+

@@ -1,0 +1,14 @@
+{% load render_table from django_tables2 %}
+{% load staticfiles %}
+<!doctype html>
+<html>
+    <head>
+        <link rel="stylesheet" href="/static/django_tables2/themes/paleblue/css/screen.css" />
+        <link href="{% static "lumberyard/css/jobstable.css" %}" rel="stylesheet" />
+        <link href="{% static "lumberyard/css/jobdetail.css" %}" rel="stylesheet" />
+        <link href="{% static "lumberyard/css/sequencedetail.css" %}" rel="stylesheet" />
+    </head>
+    <body>
+        {% render_table table %}
+    </body>
+</html>

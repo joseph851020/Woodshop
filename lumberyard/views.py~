@@ -1,0 +1,237 @@
+from django.shortcuts import get_object_or_404, render
+from django.contrib.auth import authenticate, login, logout
+from django.core.urlresolvers import reverse, reverse_lazy
+from django.http import HttpResponseRedirect
+from django.views import generic
+from django.utils import timezone
+from django.views.generic import FormView
+from lumberyard.forms import LoginForm, JobDetailForm
+from lumberyard.models import Jobs
+from lumberyard.tables import JobsTable
+from django_tables2 import RequestConfig
+from django.contrib.auth.decorators import login_required
+from django.contrib import admin
+from django.db.models import Q
+import time
+
+@login_required(login_url='/')
+def indexView(request):
+    results = Jobs.objects.filter(Q(job_active = 1))
+    table = JobsTable(results)
+    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+    return render(request, 'lumberyard/index.html', {'table': table})
+
+
+class LoginView(generic.FormView):
+    form_class = LoginForm
+    success_url = reverse_lazy('lumberyard:index')
+    template_name = 'lumberyard/login.html'
+
+    def form_valid(self, form):
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
+        user = authenticate(username=username, password=password)
+
+        if user is not None and user.is_active:
+            login(self.request, user)
+            return super(LoginView, self).form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+def ajaxjobsearch(request):
+
+    if request.is_ajax():
+        startdate = request.GET.get('startdate')
+        enddate = request.GET.get('enddate')
+        datetype = request.GET.get('datetype')
+        jobstatus = request.GET.get('jobstatus')
+        searchtext = request.GET.get('searchtext')
+        if jobstatus != '2':
+            if datetype == "date_awarded":
+                if startdate != '' and enddate != '':
+                    results = Jobs.objects.filter(
+                        Q( job_active = jobstatus ) &
+                        Q( date_awarded__range = [startdate, enddate] ) &
+                        (Q( job_name__contains = searchtext ) |
+                        Q( job_num__contains = searchtext ) |
+                        Q( email_alias__contains = searchtext ) |
+                        Q( producer__user__first_name__contains = searchtext ) |
+                        Q( producer__user__last_name__contains = searchtext ) |
+                        Q( lead_2D__user__first_name__contains = searchtext ) |
+                        Q( lead_2D__user__last_name__contains = searchtext ) |
+                        Q( lead_3D__user__first_name__contains = searchtext ) |
+                        Q( lead_3D__user__last_name__contains = searchtext ) |
+                        Q( agency__contains = searchtext ) |
+                        Q( agency_prod__contains = searchtext ) |
+                        Q( delivery_specs__spec_name__contains = searchtext ) |
+                        Q( client__contains = searchtext ))
+                    ).order_by( 'job_name' )
+                    table = JobsTable(results)
+                    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+                    return render(request, 'lumberyard/jobsTable.html', {'table': table})
+                else:
+                    results = Jobs.objects.filter(
+                        Q( job_active = jobstatus ) &
+                        (Q( job_name__contains = searchtext ) |
+                        Q( job_num__contains = searchtext ) |
+                        Q( email_alias__contains = searchtext ) |
+                        Q( producer__user__first_name__contains = searchtext ) |
+                        Q( producer__user__last_name__contains = searchtext ) |
+                        Q( lead_2D__user__first_name__contains = searchtext ) |
+                        Q( lead_2D__user__last_name__contains = searchtext ) |
+                        Q( lead_3D__user__first_name__contains = searchtext ) |
+                        Q( lead_3D__user__last_name__contains = searchtext ) |
+                        Q( agency__contains = searchtext ) |
+                        Q( agency_prod__contains = searchtext ) |
+                        Q( delivery_specs__spec_name__contains = searchtext ) |
+                        Q( client__contains = searchtext ))
+                    ).order_by( 'job_name' )
+                    table = JobsTable(results)
+                    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+                    return render(request, 'lumberyard/jobsTable.html', {'table': table})
+
+            else:
+                if startdate != '' and enddate != '':
+                    results = Jobs.objects.filter(
+                        Q( job_active = jobstatus ) &
+                        Q( date_delivery__range = [startdate, enddate] ) &
+                        (Q( job_name__contains = searchtext ) |
+                        Q( job_num__contains = searchtext ) |
+                        Q( email_alias__contains = searchtext ) |
+                        Q( producer__user__first_name__contains = searchtext ) |
+                        Q( producer__user__last_name__contains = searchtext ) |
+                        Q( lead_2D__user__first_name__contains = searchtext ) |
+                        Q( lead_2D__user__last_name__contains = searchtext ) |
+                        Q( lead_3D__user__first_name__contains = searchtext ) |
+                        Q( lead_3D__user__last_name__contains = searchtext ) |
+                        Q( agency__contains = searchtext ) |
+                        Q( agency_prod__contains = searchtext ) |
+                        Q( delivery_specs__spec_name__contains = searchtext ) |
+                        Q( client__contains = searchtext ))
+                    ).order_by( 'job_name' )
+                    table = JobsTable(results)
+                    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+                    return render(request, 'lumberyard/jobsTable.html', {'table': table})
+                else:
+                    results = Jobs.objects.filter(
+                        Q( job_active = jobstatus ) &
+                        (Q( job_name__contains = searchtext ) |
+                        Q( job_num__contains = searchtext ) |
+                        Q( email_alias__contains = searchtext ) |
+                        Q( producer__user__first_name__contains = searchtext ) |
+                        Q( producer__user__last_name__contains = searchtext ) |
+                        Q( lead_2D__user__first_name__contains = searchtext ) |
+                        Q( lead_2D__user__last_name__contains = searchtext ) |
+                        Q( lead_3D__user__first_name__contains = searchtext ) |
+                        Q( lead_3D__user__last_name__contains = searchtext ) |
+                        Q( agency__contains = searchtext ) |
+                        Q( agency_prod__contains = searchtext ) |
+                        Q( delivery_specs__spec_name__contains = searchtext ) |
+                        Q( client__contains = searchtext ))
+                    ).order_by( 'job_name' )
+                    table = JobsTable(results)
+                    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+                    return render(request, 'lumberyard/jobsTable.html', {'table': table})
+
+        else:
+            if datetype == "date_awarded":
+                if startdate != '' and enddate != '':
+                    results = Jobs.objects.filter(
+                        Q( date_awarded__range = [startdate, enddate] ) &
+                        (Q( job_name__contains = searchtext ) |
+                        Q( job_num__contains = searchtext ) |
+                        Q( email_alias__contains = searchtext ) |
+                        Q( producer__user__first_name__contains = searchtext ) |
+                        Q( producer__user__last_name__contains = searchtext ) |
+                        Q( lead_2D__user__first_name__contains = searchtext ) |
+                        Q( lead_2D__user__last_name__contains = searchtext ) |
+                        Q( lead_3D__user__first_name__contains = searchtext ) |
+                        Q( lead_3D__user__last_name__contains = searchtext ) |
+                        Q( agency__contains = searchtext ) |
+                        Q( agency_prod__contains = searchtext ) |
+                        Q( delivery_specs__spec_name__contains = searchtext ) |
+                        Q( client__contains = searchtext ))
+                    ).order_by( 'job_name' )
+                    table = JobsTable(results)
+                    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+                    return render(request, 'lumberyard/jobsTable.html', {'table': table})
+                else:
+                    results = Jobs.objects.filter(
+                        Q( job_name__contains = searchtext ) |
+                        Q( job_num__contains = searchtext ) |
+                        Q( email_alias__contains = searchtext ) |
+                        Q( producer__user__first_name__contains = searchtext ) |
+                        Q( producer__user__last_name__contains = searchtext ) |
+                        Q( lead_2D__user__first_name__contains = searchtext ) |
+                        Q( lead_2D__user__last_name__contains = searchtext ) |
+                        Q( lead_3D__user__first_name__contains = searchtext ) |
+                        Q( lead_3D__user__last_name__contains = searchtext ) |
+                        Q( agency__contains = searchtext ) |
+                        Q( agency_prod__contains = searchtext ) |
+                        Q( delivery_specs__spec_name__contains = searchtext ) |
+                        Q( client__contains = searchtext )
+                    ).order_by( 'job_name' )
+                    table = JobsTable(results)
+                    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+                    return render(request, 'lumberyard/jobsTable.html', {'table': table})
+
+            else:
+                results = Jobs.objects.filter(
+                    Q( date_delivery__range = [startdate, enddate] ) &
+                    (Q( job_name__contains = searchtext ) |
+                     Q( job_num__contains = searchtext ) |
+                     Q( email_alias__contains = searchtext ) |
+                     Q( producer__user__first_name__contains = searchtext ) |
+                     Q( producer__user__last_name__contains = searchtext ) |
+                     Q( lead_2D__user__first_name__contains = searchtext ) |
+                     Q( lead_2D__user__last_name__contains = searchtext ) |
+                     Q( lead_3D__user__first_name__contains = searchtext ) |
+                     Q( lead_3D__user__last_name__contains = searchtext ) |
+                     Q( agency__contains = searchtext ) |
+                     Q( agency_prod__contains = searchtext ) |
+                     Q( delivery_specs__spec_name__contains = searchtext ) |
+                     Q( client__contains = searchtext ))
+                ).order_by( 'job_name' )
+                if startdate != '' and enddate != '':
+                    table = JobsTable(results)
+                    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+                    return render(request, 'lumberyard/jobsTable.html', {'table': table})
+                else:
+                    results = Jobs.objects.filter(
+                        Q( job_name__contains = searchtext ) |
+                        Q( job_num__contains = searchtext ) |
+                        Q( email_alias__contains = searchtext ) |
+                        Q( producer__user__first_name__contains = searchtext ) |
+                        Q( producer__user__last_name__contains = searchtext ) |
+                        Q( lead_2D__user__first_name__contains = searchtext ) |
+                        Q( lead_2D__user__last_name__contains = searchtext ) |
+                        Q( lead_3D__user__first_name__contains = searchtext ) |
+                        Q( lead_3D__user__last_name__contains = searchtext ) |
+                        Q( agency__contains = searchtext ) |
+                        Q( agency_prod__contains = searchtext ) |
+                        Q( delivery_specs__spec_name__contains = searchtext ) |
+                        Q( client__contains = searchtext )
+                    ).order_by( 'job_name' )
+                    table = JobsTable(results)
+                    RequestConfig(request, paginate={'per_page': 12}).configure(table)
+                    return render(request, 'lumberyard/jobsTable.html', {'table': table})
+
+def JobDetailView(request, job_id):
+    job_name = Jobs.objects.get( id = job_id ).job_name
+    job_num = Jobs.objects.get( id = job_id ).job_num
+    return render(request, 'lumberyard/jobDetail.html', {'job_name': job_name, 'job_num': job_num})
+
+
+def jobsEditView():
+    pass
+
+
+"""
+class JobsModelAdmin(admin.ModelAdmin):
+    def get_form(self.request, obj=None, **kwargs):
+        if request.user.is_superuser:
+            kwargs['form'] = MySuperuserForm
+
+        return super(MyModelAdmin, self).get_form(request, obj, **kwargs)
+"""
+

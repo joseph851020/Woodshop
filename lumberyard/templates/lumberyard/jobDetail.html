@@ -1,0 +1,130 @@
+{% extends "lumberyard/base.html" %}
+{% load render_table from django_tables2 %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% load group_filter %}
+{% block title %}JobDetail - Lumberyard{% endblock %}
+{% block extrahead %}
+    <link href="{% static "django_tables2/themes/paleblue/css/screen.css" %}" rel="stylesheet" />
+    <link href="{% static "lumberyard/css/jobdetail.css" %}" rel="stylesheet" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script type="text/javascript">
+      $( document ).ready( function() {
+        $( '#spinner' ).hide();
+        $( '#searchbutton' ).click( function() {
+            if ($( '#sequencenum1' ).val()!=''&&$( '#sequencenum2' ).val()=='') alert('Please insert the end num.');
+            else if ($( '#sequencenum1' ).val()==''&&$( '#sequencenum2' ).val()!='') alert('Please insert the start num.');
+            else if (parseInt($( '#sequencenum1' ).val()) > parseInt($( '#sequencenum2' ).val())) alert('Start num must must be smaller than End num');
+            else {
+                sequencenum1='';
+                sequencenum2='';
+                if($( '#sequencenum1' ).val()!=''&&$( '#sequencenum2' ).val()!='') {
+                    sequencenum1 = $('#sequencenum1').val();
+                    sequencenum2 = $('#sequencenum2').val();
+                }
+                searchtext = $( '#searchtext').val();
+                jobname = $( '#jobname' ).val();
+                $( '.tabledata' ).html( '' ).load( '{% url 'lumberyard:sequenceSearch' %}?sequencenum1=' + sequencenum1 + '&sequencenum2=' + sequencenum2 + '&searchtext=' + searchtext +'&jobname=' + jobname);
+            }
+        });
+      });
+
+      $( document ).ajaxStart( function() {
+        $( '#spinner' ).show();
+        }).ajaxStop( function() {
+        $( '#spinner' ).hide();
+      });
+    </script>
+{% endblock %}
+{% block content %}
+  <div class="row">
+    <div class="top-navigation">
+      <div id="logo-container"></div>
+      <div id="nav-link">
+        {% if request.user|has_group:"admin" %}
+        <a href="{% url 'admin:index' %}" class="link">Admin</a><span style="color: #fdcf17;">|</span>
+        {% endif %}
+        <a href="{% url 'lumberyard:logout' %}" class="link">Logout</a>
+      </div>
+      <div id="job-info">
+          {{ job_name }} - {{ job_num }}
+          <input type="hidden" id="jobname" value="{{ job_name }}"/>
+      </div>
+    </div>
+    <hr>
+  </div>
+  <div class="row">
+    <div class="jobdetailinfo">
+        <div id="jobdetaillabel" class="row">
+            Job Detail
+            <a href="{% url 'lumberyard:index' %}"><-- back to job list</a>
+        </div>
+        <div id="internal">
+            <p id="internallabel">internal</p>
+            <div id="internalcontent">
+                <p>producer: {{ producer }}</p>
+                <p>email alias: {{ email_alias }}</p>
+                <p>2D lead: {{ lead_2D }}</p>
+                <p>3D lead: {{ lead_3D }}</p>
+                <p>date awarded: {{ date_awarded|date:"SHORT_DATE_FORMAT" }}</p>
+                <p>pitched: {{ date_pitch|date:"SHORT_DATE_FORMAT" }}</p>
+                <p>delivery: {{ date_delivery|date:"SHORT_DATE_FORMAT" }}</p>
+            </div>
+        </div>
+        {% if request.user|has_group:"admin" or request.user|has_group:"producer" %}
+        <div id="agency">
+            <p id="agencylabel">agency</p>
+            <div id="agencycontent">
+                <p>agency: {{ agency }}</p>
+                <p>agency contact: {{ agency_prod }}</p>
+                <p>email: {{ agency_prod_email }}</p>
+                <p>phone: {{ agency_prod_phone }}</p>
+                <p class="blankline">blank line: same color as background </p>
+                <p class="blankline">blank line: same color as background </p>
+                <p class="blankline">blank line: same color as background </p>
+            </div>
+        </div>
+        <div id="client">
+            <p id="clientlabel">client</p>
+            <div id="clientcontent">
+                <p>client: {{ client }}</p>
+                <p>client contact: {{ client_contact_name }}</p>
+                <p>email: {{ client_contact_email }}</p>
+                <p>phone: {{ client_contact_phone }}</p>
+                <p class="blankline">blank line: same color as background </p>
+                <p class="blankline">blank line: same color as background </p>
+                <p class="blankline">blank line: same color as background </p>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="sequencesearchfield">
+      <form>
+          <div id="sequencetablelabel">SEQUENCE LIST</div>
+          <div id="datefield">
+              SHOT # RANGE:
+              <input type="text" id="sequencenum1">
+              <span style="text-transform: lowercase;">to</span>
+              <input type="text" id="sequencenum2">
+          </div>
+          <div id="searchtextfield">
+              <input type="text" id="searchtext">
+          </div>
+          <div id="searchbutton">
+              <input type="reset" value="RESET" id="reset">
+              <input type="button" value="SEARCH" id="searchbutton">
+              <span id="spinner"><img src="http://upload.wikimedia.org/wikipedia/commons/d/de/Ajax-loader.gif"/></span>
+          </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="tabledata">
+        {% render_table table %}
+    </div>
+  </div>
+{% endblock %}
