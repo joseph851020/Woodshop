@@ -47,7 +47,7 @@ class JobDetailForm(forms.Form):
     helper = FormHelper()
     helper.form_method = 'POST'
     helper.layout = Layout(
-            Field('job_active', css_class='input-sm'),
+        Field('job_active', css_class='input-sm'),
         Field('job_num', css_class='input-sm'),
         Field('job_name', css_class='input-sm'),
         Field('job_dir', css_class='input-sm'),
